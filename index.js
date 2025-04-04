@@ -1,15 +1,21 @@
 const express = require('express');
-const { resolve } = require('path');
+const mongoose = require('mongoose');
+const menuRoutes = require('./routes/MenuRoutes.js');
 
 const app = express();
-const port = 3010;
+const PORT = process.env.PORT || 3000;
 
-app.use(express.static('static'));
+app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.sendFile(resolve(__dirname, 'pages/index.html'));
-});
+mongoose.connect('mongodb+srv://sanjayraveendran48:qwn4SgC6F2FD3gnz@cluster0.qc0gzcv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("MongoDB connected"))
+.catch(err => console.error("MongoDB connection error:", err));
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+app.use('/api', menuRoutes);
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
